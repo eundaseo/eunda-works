@@ -12,12 +12,16 @@ All pages use the Hamchorom (HCRDotum) webfont, regular weight 400, with font-di
 - `dist/image.html`: 이미지 갤러리, 카테고리 필터
 - `dist/Live.html`: 영상 기획안
 - `dist/project.html`: Final Project 소개
+- `dist/content.js`: 메뉴, 자기소개, 작업물 데이터
 - `dist/style.css`: 공통 디자인과 반응형 스타일
-- `dist/app.js`: 임시 프로젝트 데이터, 페이지 구성, 상세 창, 관심 작품 저장
+- `dist/app.js`: 페이지 구성, 상세 창, 관심 작품 저장
+- `dist/desktop.js`: 바탕화면, 창 제어, START 메뉴, 시계
 
 ## 콘텐츠 교체
 
-각 페이지는 독립적인 HTML 진입점을 가지며, 공통 app.js의 items 배열에서 내용을 관리합니다. title(제목), desc(요약), body(본문), image(이미지 경로)를 수정하세요. 새 이미지 파일은 dist/assets에 넣고 경로를 연결합니다. 현재 세 이미지 카드는 같은 생성 이미지의 크롭 스터디입니다.
+각 페이지는 독립적인 HTML 진입점을 가지며, 콘텐츠는 `dist/content.js`에서 관리합니다. `profile`에서 자기소개를, `items` 배열에서 작업물을 수정하세요. 작업물의 title(제목), desc(요약), body(본문), image(이미지 경로)를 바꾸면 됩니다. 새 이미지 파일은 `dist/assets`에 넣고 경로를 연결합니다. 현재 세 이미지 카드는 같은 생성 이미지의 크롭 스터디입니다.
+
+모든 HTML은 `content.js` → `app.js` → `desktop.js` 순서로 불러옵니다. 이 순서는 바꾸지 마세요. 새 작업물을 추가할 때는 `content.js`만 수정하면 됩니다.
 
 영상은 아직 실제 영상이 없는 임시 스토리보드입니다. 실제 자료로 교체할 때 영상 파일을 assets에 넣고 video 요소를 연결하거나 영상 서비스 링크를 사용하세요. 현재 파일 업로드 관리자, 로그인, 서버 저장 기능은 없습니다. 파일을 수정한 후 다시 배포하는 정적 웹사이트입니다.
 
