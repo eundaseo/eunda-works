@@ -1,10 +1,35 @@
 /* Desktop presentation uses the existing portfolio data and actions. */
 (() => {
-  const icon = name => `<img class="desktop-category-icon" src="assets/icon-${name}.svg" alt="" aria-hidden="true">`;
+  const icon = name => `<img class="desktop-category-icon" src="assets/icon-${name}.svg?v=earth-palette-20261003" alt="" aria-hidden="true">`;
   const icons = {home:icon('orbit'),introduce:icon('universe'),Live:icon('live'),project:icon('commercial'),image:icon('ai')};
   const current = routes.find(([id]) => id === page);
   const title = current ? current[1] : 'eunda works';
   const app = document.getElementById('app');
+  // A quiet, resolution-independent observatory behind every portfolio window.
+  const wallpaper = document.createElement('div');
+  wallpaper.className = 'observatory-wallpaper';
+  wallpaper.setAttribute('aria-hidden', 'true');
+  const orbitPaths = [[400,170],[490,230],[600,300]].map(([rx,ry],i) => {
+    const d = `M ${930-rx} 450 a ${rx} ${ry} 0 1 0 ${rx*2} 0 a ${rx} ${ry} 0 1 0 ${-rx*2} 0`;
+    return `<path id="desktop-orbit-${i}" class="observatory-orbit" d="${d}"/><circle class="observatory-planet planet-${i}" r="${5+i*3}"><animateMotion dur="${72+i*31}s" begin="${-18-i*22}s" repeatCount="indefinite"><mpath href="#desktop-orbit-${i}"/></animateMotion></circle>`;
+  }).join('');
+  wallpaper.innerHTML = `<svg class="observatory-chart" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">${orbitPaths}<circle class="observatory-center" cx="930" cy="450" r="2"/><path class="observatory-axis" d="M930 40v820M320 450h1100"/></svg><div class="observatory-stars"></div><div class="observatory-grain"></div>`;
+  let starSeed = 37;
+  const starRandom = () => ((starSeed = (starSeed*16807)%2147483647)-1)/2147483646;
+  const stars = wallpaper.querySelector('.observatory-stars');
+  for (let i=0;i<72;i++) {
+    const star = document.createElement('i');
+    star.className = `observatory-star${i%18===0?' observatory-cross':''}`;
+    star.style.cssText = `left:${16+starRandom()*82}%;top:${4+starRandom()*88}%;--delay:${-starRandom()*12}s;--duration:${5+starRandom()*7}s;--peak:${.3+starRandom()*.55}`;
+    stars.append(star);
+  }
+  document.body.prepend(wallpaper);
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  const chart = wallpaper.querySelector('svg');
+  const syncWallpaperMotion = () => motionPreference.matches ? chart.pauseAnimations() : chart.unpauseAnimations();
+  syncWallpaperMotion();
+  motionPreference.addEventListener('change', syncWallpaperMotion);
+
   // A native star cursor remains usable without the decorative trail.
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -29,7 +54,7 @@
   const content = document.createElement('div');
   content.className = 'window-content';
   if (page === 'home') {
-    content.innerHTML = `<main class="space-home"><div class="space-caption">PERSONAL UNIVERSE · EST. 2026</div><div class="welcome"><p class="welcome-small">Welcome to my little universe</p><h1>eunda <span>works</span></h1><p class="welcome-copy">커머스의 시선으로 탐험하는 AI의 가능성.<br>작은 호기심으로 시작된 작업들을 만나보세요.</p></div><nav class="planet-links" aria-label="컬렉션 선택">${routes.map(([id,name,eng],i)=>`<a href="${id}.html"><span class="planet-icon" aria-hidden="true">${icons[id]}</span><strong>${name}</strong><small>0${i+1} / ${eng}</small><span class="open-label">OPEN ↗</span></a>`).join('')}</nav><div class="space-foot"><span>SELECT A COLLECTION TO EXPLORE</span><span>한국경제 AI 교육 포트폴리오</span></div></main>`;
+    content.innerHTML = `<main class="space-home" aria-label="우주 바탕화면"></main>`;
   } else {
     content.append(document.getElementById('page-content'));
   }
@@ -48,7 +73,7 @@
   const status=document.createElement('div');status.className='window-status';
   status.innerHTML=`<span>${page==='home'?routes.length+' collections':page==='introduce'?'PROFILE FILE':items.filter(x=>x.type===page).length+' projects'} · ${title}</span><span>AI CREATIVE ARCHIVE</span><span class="status-grip" aria-hidden="true">◢</span>`;win.append(status);
   const taskbar=document.createElement('footer');taskbar.className='desktop-taskbar';
-  taskbar.innerHTML=`<button class="start-button" id="start-button" aria-expanded="false" aria-controls="start-menu"><span aria-hidden="true">${icons.home}</span> START</button><div class="task-divider"></div><button class="task-tab active" id="restore-window" aria-controls="portfolio-window" aria-expanded="true">${icons[page]||icons.home} <span>${title}</span></button><button class="task-tab" id="show-saved" aria-label="관심 작품 보기">♡ <span>My picks</span> <b id="saved-count">${saved.length}</b></button><span class="taskbar-note">a little curiosity, a new world.</span><span class="system-tray" aria-label="온라인 포트폴리오">◉ <span>eunda works © 2026</span></span>`;
+  taskbar.innerHTML=`<button class="start-button" id="start-button" aria-expanded="false" aria-controls="start-menu">START</button><div class="task-divider"></div><button class="task-tab active" id="restore-window" aria-controls="portfolio-window" aria-expanded="true">${icons[page]||icons.home} <span>${title}</span></button><button class="task-tab" id="show-saved" aria-label="관심 작품 보기">♡ <span>My picks</span> <b id="saved-count">${saved.length}</b></button><span class="taskbar-note">a little curiosity, a new world.</span><span class="system-tray" aria-label="온라인 포트폴리오">◉ <span>eunda works © 2026</span></span>`;
   const start=document.createElement('nav');start.id='start-menu';start.className='start-menu';start.hidden=true;start.setAttribute('aria-label','시작 메뉴');
   start.innerHTML=`<div class="start-banner">eunda <b>works</b></div><div>${routes.map(([id,name])=>`<a href="${id}.html">${icons[id]} ${name}</a>`).join('')}<button id="start-picks">♡ 관심 작품</button></div>`;
   app.prepend(top,shortcuts,win);app.append(start,taskbar);

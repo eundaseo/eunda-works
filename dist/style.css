@@ -22,11 +22,11 @@ body:before{display:none}
 .desktop-menubar{background:linear-gradient(#0008,transparent);text-shadow:0 1px 4px #000}
 .desktop-shortcuts a{text-shadow:0 1px 4px #000,0 1px 2px #000}
 .star-cursor-trail{position:fixed;inset:0;overflow:hidden;z-index:2147483647;pointer-events:none;user-select:none}
-.cursor-sparkle{position:absolute;width:var(--size);height:var(--size);background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 4px #e7eaff);animation:cursor-twinkle .75s ease-out forwards}
+.cursor-sparkle{position:absolute;width:var(--size);height:var(--size);background:url('assets/star-cursor.svg?v=starlight-20261003') center/contain no-repeat;filter:drop-shadow(0 0 3px #cbd5ff);animation:cursor-twinkle .75s ease-out forwards}
 @keyframes cursor-twinkle{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(0)}20%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(15deg)}100%{opacity:0;transform:translate(calc(-50% + var(--drift)),15px) scale(.1) rotate(70deg)}}
 @media(hover:hover) and (pointer:fine){
-  body,body *{cursor:url('assets/star-cursor.svg') 16 16,auto}
-  a,button,[role="button"],a *,button *{cursor:url('assets/star-cursor.svg') 16 16,pointer}
+  body,body *{cursor:url('assets/star-cursor.svg?v=starlight-20261003') 16 16,auto}
+  a,button,[role="button"],a *,button *{cursor:url('assets/star-cursor.svg?v=starlight-20261003') 16 16,pointer}
   input,textarea,[contenteditable="true"]{cursor:text}
 }
 @media(prefers-reduced-motion:reduce){.star-cursor-trail{display:none}}
@@ -175,3 +175,39 @@ body:before{display:none}
  .universe-career article{grid-template-columns:1fr;gap:14px;padding:23px 0}.universe-career h3{font-size:22px}.universe-career ul{font-size:11px;line-height:2;margin:0}.universe-freelance article{grid-template-columns:1fr;gap:7px;padding:17px 0}.universe-freelance h3{font-size:12px}
  .universe-contact{grid-template-columns:1fr;gap:26px;padding:29px 21px}.universe-contact h2{font-size:28px}.universe-contact p{font-size:11px}.universe-email{font-size:19px}
 }
+
+/* Personal observatory: cool black desktop, sparse stars and pixel icons. */
+body{background:#101116;background-attachment:fixed}
+.observatory-wallpaper{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 72% 38%,#2933451c,transparent 65%),#101116}
+.observatory-chart{position:absolute;width:100%;height:100%;inset:0;opacity:.8}
+.observatory-orbit{fill:none;stroke:#b2bdcd;stroke-width:.65;opacity:.23}
+.observatory-planet{fill:#d1d7e1;stroke:#eef2f9;stroke-width:.8}
+.observatory-planet.planet-1{fill:#13171f;stroke:#8e9aab;stroke-width:2}
+.observatory-planet.planet-2{fill:#aab4c3}
+.observatory-center{fill:#cad2df;opacity:.4}
+.observatory-axis{fill:none;stroke:#9eabc2;stroke-width:.4;opacity:.09}
+.observatory-stars,.observatory-grain{position:absolute;inset:0}
+.observatory-grain{background:url('assets/observatory-grain.svg');opacity:.045}
+.observatory-star{position:absolute;width:2px;height:2px;background:#dce5fa;opacity:0;animation:observatory-twinkle var(--duration) ease-in-out var(--delay) infinite}
+.observatory-cross{width:13px;height:13px;background:transparent}
+.observatory-cross:before,.observatory-cross:after{content:'';position:absolute;background:#e6eeff;box-shadow:0 0 7px #cad8ff66}
+.observatory-cross:before{width:1px;height:13px;left:6px}
+.observatory-cross:after{width:13px;height:1px;top:6px}
+@keyframes observatory-twinkle{0%,15%,100%{opacity:0}45%{opacity:var(--peak)}65%{opacity:calc(var(--peak)*.4)}80%{opacity:0}}
+.desktop-menubar{background:#101116b3;border-bottom:1px solid #ffffff12}
+.desktop-shortcuts a{border-radius:0}
+.desktop-shortcuts strong{font-family:monospace;background:#1011169c;color:#dde3ed;border-radius:0;font-size:11px;box-shadow:none}
+.desktop-shortcuts .desktop-category-icon{width:44px;height:44px;filter:none;image-rendering:pixelated}
+.desktop-category-icon{image-rendering:pixelated}
+.desktop-shortcuts a:hover,.desktop-shortcuts a[aria-current]{background:#c9d4eb0b;border:1px dotted #a6b4ca}
+.space-home{background:none;min-height:610px}
+.start-button{font-family:monospace;letter-spacing:.5px;padding-left:13px;padding-right:13px}
+@media(max-width:700px){.desktop-shortcuts .desktop-category-icon{width:32px;height:32px}.desktop-shortcuts strong{font-size:clamp(9px,2.6vw,11px)}.observatory-chart{width:180%;left:-65%}.desktop-menubar{background:#101116cc}.observatory-stars{opacity:.8}}
+@media(prefers-reduced-motion:reduce){.observatory-star{animation:none;opacity:calc(var(--peak)*.45)}}
+
+/* Balanced desktop shortcut proportions and close, outlined labels. */
+.desktop-shortcuts a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 4px}
+.desktop-shortcuts a>span{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;font-size:0;line-height:0;filter:none}
+.desktop-shortcuts .desktop-category-icon{width:44px;height:44px;margin:0;object-fit:contain}
+.desktop-shortcuts strong{padding:0;background:transparent;box-shadow:none;color:#edf1f8;-webkit-text-stroke:1.5px #080b12;paint-order:stroke fill;text-shadow:0 1px 2px #080b12;line-height:1.35}
+@media(max-width:700px){.desktop-shortcuts a{padding:6px 1px;gap:4px}.desktop-shortcuts a>span,.desktop-shortcuts .desktop-category-icon{width:32px;height:32px}.desktop-shortcuts strong{padding:0;background:transparent}}
