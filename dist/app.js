@@ -10,22 +10,119 @@ const heart=id=>`<button class="heart" data-save="${id}" aria-label="${items.fin
 function heading(eng,ko,desc,count){return `<section class="page-heading"><div class="eyebrow">HOME / ${eng}</div><div class="head-row"><div><h1>${ko}</h1><p>${desc}</p></div><span class="item-count">${count} ITEMS · CURATED BY ME</span></div></section>`}
 function card(x){return `<article class="product" data-tag="${x.tag}">${heart(x.id)}<button class="product-open" data-open="${x.id}"><div class="product-picture"><img src="${x.image}" alt="${x.title}" style="object-position:${x.position||'center'};${x.id==='i2'?'transform:scale(1.45)':x.id==='i3'?'transform:scale(1.2)':''}"><span class="badge">${x.type==='Live'?'STORYBOARD':'AI GENERATED'}</span>${x.type==='Live'?'<span class="play-disc">▷</span><span class="duration">영상 기획안</span>':''}</div><div class="product-meta">${x.tag.toUpperCase()} / 2026</div><h3>${x.title}</h3><p class="product-desc">${x.desc}</p></button></article>`}
 const lineBreaks=value=>value.replace(/\n/g,'<br>');
+function commercialWork(x){
+  return `<article class="commercial-work">
+    <header class="commercial-title"><div><div class="eyebrow">${x.client} <span>／ ${x.date}</span></div><h2>${x.title}</h2><p>${x.desc}</p></div>${heart(x.id)}</header>
+    <div class="commercial-video" data-video-frame>
+      <button class="commercial-play" data-play-video="${x.youtubeId}" aria-label="${x.title} 영상 재생">
+        <img src="https://i.ytimg.com/vi/${x.youtubeId}/maxresdefault.jpg" alt="29CM × 재지팩트 Lifes Like 10주년 굿즈 티저 영상 썸네일" referrerpolicy="no-referrer" decoding="async">
+        <span class="commercial-play-disc" aria-hidden="true">▶</span><span class="commercial-play-label">PLAY FILM</span>
+      </button>
+    </div>
+    <div class="commercial-video-caption"><span>${x.tag} · ${x.date}</span><a href="${x.videoUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></div>
+    <div class="commercial-overview">
+      <section class="commercial-summary"><div class="eyebrow">01 / SUMMARY</div><h3>제작 목적</h3><p>${x.summary}</p></section>
+      <section class="commercial-role"><div class="eyebrow">02 / ROLE & CONTRIBUTION</div><h3>담당 역할과 기여도</h3><p>${x.roles.join(' · ')}</p><dl class="contribution-list">${x.contributions.map(c=>`<div><dt>${c.label}</dt><dd><span class="contribution-track" aria-hidden="true"><span style="width:${c.percent}%"></span></span><span>${c.percent}%</span></dd></div>`).join('')}</dl></section>
+    </div>
+    <section class="commercial-execution"><div class="eyebrow">03 / EXECUTION</div><h3>연출과 편집</h3><div class="execution-grid">${x.execution.map((text,i)=>`<div><span class="execution-number">0${i+1}</span><p>${text}</p></div>`).join('')}</div></section>
+    <section class="commercial-results"><div><div class="eyebrow">04 / RESULTS</div><h3>활용 및 성과</h3><ul>${x.results.map(text=>`<li>${text}</li>`).join('')}</ul></div><div class="commercial-metric"><span>${x.revenueLabel}</span><strong>${x.revenue}</strong></div></section>
+    <section class="commercial-tools"><span class="eyebrow">05 / TOOLS</span><ul>${x.tools.map(tool=>`<li>${tool}</li>`).join('')}</ul></section>
+  </article>`;
+}
+function liveWork(x){
+  return `<article class="commercial-work live-work" data-live-company="${x.employer}" data-live-work="${x.id}">
+    <header class="commercial-title"><div><div class="eyebrow">${x.employer} ／ ${x.client} ／ ${x.date}</div><h2>${x.title}</h2><p>${x.desc}</p></div>${heart(x.id)}</header>
+    <div class="live-lead">
+      <div class="live-highlight"><div class="commercial-video live-vertical-video" data-video-frame><button class="commercial-play" data-play-video="${x.youtubeId}" aria-label="${x.title} 하이라이트 영상 재생"><img src="${x.image}" alt="Mmlg 협업 상품을 착용한 해쭈의 라이브 방송 캡처"><span class="commercial-play-disc" aria-hidden="true">▶</span><span class="commercial-play-label">LIVE HIGHLIGHT</span></button></div><div class="commercial-video-caption"><span>방송 하이라이트 · Shorts</span><a href="${x.videoUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></div></div>
+      <section class="live-context"><div class="eyebrow">01 / BACKGROUND</div><h3>방송 기획 의도</h3><p>${x.summary}</p><div class="live-metrics">${x.metrics.map(m=>`<div><span>${m.label}</span><strong>${m.value}</strong><small>${m.note}</small></div>`).join('')}</div></section>
+    </div>
+    <section class="live-role"><div class="eyebrow">02 / ROLE</div><h3>담당 역할</h3><ul>${x.roles.map(role=>`<li>${role}</li>`).join('')}</ul></section>
+    <section class="commercial-execution"><div class="eyebrow">03 / EXECUTION</div><h3>기획과 현장 연출</h3><div class="execution-grid">${x.execution.map((e,i)=>`<div><span class="execution-number">0${i+1}</span><h4>${e.title}</h4><p>${e.text}</p></div>`).join('')}</div></section>
+    <section class="live-gallery"><div class="eyebrow">04 / ON AIR</div><h3>방송 캡처</h3><div class="live-stills">${x.gallery.map(g=>`<figure><a href="${g.src}" target="_blank" rel="noopener" aria-label="${g.caption} 원본 캡처 크게 보기"><img src="${g.src}" alt="${g.caption}" loading="lazy" decoding="async"></a><figcaption>${g.caption}<span aria-hidden="true"> ↗</span></figcaption></figure>`).join('')}</div></section>
+    <details class="live-press"><summary>협업 컬렉션 완판 관련 기사 캡처 보기</summary><p>방송 이후 협업 컬렉션과 완판 소식을 소개한 기사 캡처입니다.</p><a href="${x.pressImage}" target="_blank" rel="noopener" aria-label="기사 캡처 크게 보기"><img src="${x.pressImage}" alt="Mmlg X 해쭈 협업 컬렉션, 무신사 라이브 완판 기사 캡처" loading="lazy"></a></details>
+  </article>`;
+}
+function filterLive(company){
+  document.querySelectorAll('[data-live-filter]').forEach(button=>{const active=button.dataset.liveFilter===company;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+  let count=0;
+  document.querySelectorAll('#live-works [data-live-company]').forEach(work=>{work.hidden=company!=='전체'&&work.dataset.liveCompany!==company;if(!work.hidden)count++;});
+  document.getElementById('live-empty').hidden=count>0;
+  document.getElementById('live-count').textContent=`${count}개의 방송`;
+  document.getElementById('musinsa-experience').hidden=!['전체','무신사'].includes(company);
+  // Hidden broadcasts should not continue playing in the background.
+  document.querySelectorAll('#live-works [data-live-company][hidden] iframe').forEach(frame=>{const work=items.find(x=>x.id===frame.closest('[data-live-work]').dataset.liveWork);if(work){const holder=document.createElement('div');holder.innerHTML=liveWork(work);frame.closest('[data-video-frame]').replaceChildren(...holder.querySelector('[data-video-frame]').childNodes);}});
+}
+function aiWork(x){
+  return `<article class="commercial-work ai-work" data-ai-category="${x.tag}">
+    <header class="commercial-title"><div><div class="eyebrow">${x.projectKind} ／ ${x.tag} ／ ${x.date}</div><h2>${x.title}</h2><p>${x.subtitle}</p></div>${heart(x.id)}</header>
+    <div class="ai-character-intro"><img src="${x.image}" alt="무지개 사탕을 든 아기 백호 김호덕"><div><span class="ai-handle">${x.handle}</span><p>${x.desc}</p><span class="ai-contribution">제작 기여도 ${x.contribution}</span></div></div>
+    <section class="ai-videos"><div class="eyebrow">01 / SHORTS</div><h3>김호덕의 음식 탐구</h3><div class="ai-episodes">${x.videos.map((v,i)=>`<article class="ai-episode"><div class="ai-episode-title"><span>EP. 0${i+1}</span><h4>${v.label}</h4></div><div class="commercial-video live-vertical-video" data-video-frame><button class="commercial-play ${v.poster.startsWith('http')?'ai-youtube-poster':''}" data-play-video="${v.youtubeId}" aria-label="김호덕 ${v.label} 영상 재생"><img src="${v.poster}" alt="김호덕 ${v.label} 영상 썸네일" decoding="async"><span class="commercial-play-disc" aria-hidden="true">▶</span><span class="commercial-play-label">PLAY SHORTS</span></button></div><a class="ai-youtube-link" href="${v.url}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></article>`).join('')}</div></section>
+    <section class="ai-overview"><div class="eyebrow">02 / OVERVIEW</div><h3>캐릭터와 콘텐츠 기획</h3><p>${x.summary}</p><a href="${x.characterSheet}" target="_blank" rel="noopener" aria-label="김호덕 캐릭터 시트 크게 보기"><img class="ai-character-sheet" src="${x.characterSheet}" alt="김호덕의 정면, 측면, 뒷모습, 앉은 자세, 표정과 사탕을 든 모습" loading="lazy"></a></section>
+    <section class="live-role"><div class="eyebrow">03 / ROLE</div><h3>담당 역할</h3><ul>${x.roles.map(role=>`<li>${role}</li>`).join('')}</ul></section>
+    <section class="commercial-execution"><div class="eyebrow">04 / PROCESS & TOOLS</div><h3>AI와 함께 만든 제작 과정</h3><div class="execution-grid">${x.process.map((step,i)=>`<div><div class="ai-process-top"><span class="execution-number">0${i+1}</span><span class="ai-tool">${step.tool}</span></div><h4>${step.title}</h4><p>${step.text}</p></div>`).join('')}</div></section>
+    <section class="ai-stills-section"><div class="eyebrow">05 / SCENE STUDY</div><h3>알사탕 에피소드 장면</h3><div class="ai-stills">${x.gallery.map(g=>`<figure><a href="${g.src}" target="_blank" rel="noopener" aria-label="${g.caption} 크게 보기"><img src="${g.src}" alt="${g.caption}" loading="lazy"></a><figcaption>${g.caption} ↗</figcaption></figure>`).join('')}</div></section>
+  </article>`;
+}
+function resetVideoPreviews(root){
+  root.querySelectorAll('[data-video-frame]').forEach(frame=>{if(frame.querySelector('iframe')&&frame._videoPreview)frame.replaceChildren(frame._videoPreview.cloneNode(true));});
+}
+function filterAi(category){
+  document.querySelectorAll('[data-ai-filter]').forEach(button=>{const active=button.dataset.aiFilter===category;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+  let count=0;
+  document.querySelectorAll('#ai-works [data-ai-category]').forEach(work=>{work.hidden=category!=='전체'&&work.dataset.aiCategory!==category;if(work.hidden)resetVideoPreviews(work);else count++;});
+  document.getElementById('ai-empty').hidden=count>0;
+  document.getElementById('ai-count').textContent=`${count}개의 프로젝트`;
+}
+function playPortfolioVideo(button){
+  const ai=button.closest('.ai-work');
+  if(ai)resetVideoPreviews(ai);
+
+  const frame=button.closest('[data-video-frame]');
+  frame._videoPreview=button.cloneNode(true);
+  const iframe=document.createElement('iframe');
+  iframe.src=`https://www.youtube-nocookie.com/embed/${button.dataset.playVideo}?autoplay=1&rel=0`;
+  iframe.title=button.getAttribute('aria-label');
+  iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.referrerPolicy='strict-origin-when-cross-origin';
+  iframe.allowFullscreen=true;
+  frame.replaceChildren(iframe);
+  iframe.focus();
+}
 function renderPage(){const target=document.getElementById('page-content');if(!target)return;
 if(page==='introduce'){
-  const sections=profile.sections.map((section,index)=>`<article class="${section.featured?'profile-note':''}"><span class="profile-no">${String(index+1).padStart(2,'0')}</span><h2>${section.title}</h2>${section.list?`<ul>${section.list.map(entry=>`<li>${entry}</li>`).join('')}</ul>`:''}${section.quote?`<blockquote>“${lineBreaks(section.quote)}”</blockquote>`:''}${section.text?`<p>${section.text}</p>`:''}</article>`).join('');
-  target.innerHTML=`<section class="profile-hero"><div class="profile-folder" aria-hidden="true"><span class="folder-tab">MY PROFILE</span><div class="profile-avatar">✦</div><small>EUNDA / CREATIVE ARCHIVE</small></div><div class="profile-intro"><div class="eyebrow">${profile.eyebrow}</div><h1>${profile.greeting}<br><span class="serif">${profile.name}</span></h1><p>${lineBreaks(profile.summary)}</p><div class="profile-chips">${profile.keywords.map(keyword=>`<span>${keyword}</span>`).join('')}</div></div></section><section class="profile-grid">${sections}</section>`;
+  target.classList.add('universe-page');
+  target.innerHTML=`<section class="universe-hero"><div class="universe-intro"><div class="eyebrow">MY UNIVERSE / ABOUT & EXPERIENCE</div><div class="universe-name"><span>${profile.name}</span><span>${profile.englishName}</span></div><h1>${lineBreaks(profile.headline)}</h1><p>${profile.summary}</p><a class="universe-contact-jump" href="#contact">함께 작업하기 <span aria-hidden="true">↘</span></a></div><figure class="universe-portrait"><div class="universe-portrait-crop"><img src="${profile.image}" alt="노트북을 들고 있는 서다은의 캐릭터 프로필 이미지"></div><figcaption><span>${profile.englishName}</span><span>${profile.birth}</span></figcaption></figure></section>
+  <section class="universe-metrics" aria-label="제작 경험">${profile.metrics.map(m=>`<div><strong>${m.value}</strong><span>${m.label}</span></div>`).join('')}</section>
+  <section class="universe-section"><div class="universe-section-title"><span class="eyebrow">01 / WHAT I DO</span><h2>아이디어를 콘텐츠로, 콘텐츠를 경험으로.</h2><p>${profile.detail}</p></div><div class="universe-capabilities">${profile.capabilities.map((c,i)=>`<article><span class="universe-card-number">0${i+1}</span><h3>${c.title}</h3><ul>${c.list.map(task=>`<li>${task}</li>`).join('')}</ul></article>`).join('')}</div><div class="universe-tools"><div><span class="eyebrow">PRODUCTION TOOLS</span><ul>${profile.tools.map(t=>`<li>${t}</li>`).join('')}</ul></div><div><span class="eyebrow">AI WORKFLOW</span><ul>${profile.aiTools.map(t=>`<li>${t}</li>`).join('')}</ul></div></div></section>
+  <section class="universe-section"><div class="universe-section-title"><span class="eyebrow">02 / CAREER</span><h2>문화에서 패션, 커머스까지.</h2><p>다양한 브랜드와 플랫폼에서 쌓아온 콘텐츠 제작 경험입니다.</p></div><div class="universe-career">${profile.career.map(c=>`<article><div class="universe-career-meta"><span class="universe-period">${c.period}</span><h3>${c.company}</h3><p>${c.team} · ${c.role}</p></div><ul>${c.tasks.map(task=>`<li>${task}</li>`).join('')}</ul></article>`).join('')}</div></section>
+  <section class="universe-section"><div class="universe-section-title"><span class="eyebrow">03 / FREELANCE WORK</span><h2>함께 만든 프로젝트들.</h2></div><div class="universe-freelance">${profile.freelance.map(f=>`<article><span class="universe-period">${f.period}</span><div><h3>${f.title}</h3><p>${f.role}</p></div></article>`).join('')}</div></section>
+  <section id="contact" class="universe-contact"><div><div class="eyebrow">04 / CONTACT</div><h2>다음 이야기를<br>함께 만들어볼까요?</h2><p>영상 제작과 라이브 기획·연출, 새로운 콘텐츠 협업 제안을 기다립니다.</p></div><div class="universe-contact-action"><a class="universe-email" href="mailto:${profile.email}">${profile.email}</a><a class="universe-mail-button" href="mailto:${profile.email}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>메일 보내기 <span aria-hidden="true">↗</span></a></div></section>`;
 }
 if(page==='article'){const a=items.filter(x=>x.type===page);target.innerHTML=heading('THE EDITORIAL / READING ROOM','Notes <span class="serif">& daydreams.</span>','커머스와 AI 사이, 새로운 관점과 작은 발견을 기록합니다.','03')+`<section class="editorial-feature"><div class="feature-art">${typeArt}</div><div><div class="eyebrow">EDITOR’S PICK · SAMPLE ARTICLE</div><h2>${a[0].title}</h2><p>고객은 더 이상 상품명만 검색하지 않습니다.<br>나의 취향을 이해하는 AI는 쇼핑의 순간을 어떻게 바꿀까요?</p><button class="pill" data-open="a1">기사 읽어보기 <span>↗</span></button></div></section><div class="section-top"><h2>Latest stories</h2><span class="sample-label">생각을 담은 세 편의 글</span></div><section class="article-list">${a.map((x,i)=>`<article class="article-row"><span>0${i+1}</span><div><button data-open="${x.id}"><h3>${x.title}</h3></button><p>${x.tag} · ${x.desc}</p></div><button data-open="${x.id}">읽어보기 ↗</button>${heart(x.id)}</article>`).join('')}</section>`;}
-if(page==='image'){target.innerHTML=heading('VISUAL DIARY / IMAGE STUDIO','Little pieces of <span class="serif">wonder.</span>','상상 속 아이디어를 꺼내어, 눈에 보이는 장면으로 만듭니다.','03')+`<div class="toolbar" aria-label="이미지 분류">${['전체','브랜드 비주얼','컬러 스터디'].map((t,i)=>`<button class="filter ${i===0?'active':''}" data-filter="${t}" aria-pressed="${i===0}">${t}</button>`).join('')}</div><section class="products">${items.filter(x=>x.type===page).map(card).join('')}</section>`;}
-if(page==='Live'){target.innerHTML=heading('MOTION ROOM','Ideas in <span class="serif">motion.</span>','짧은 순간에 전하는 긴 여운. 브랜드의 이야기를 움직임으로 그립니다.','03')+`<section class="cinema"><div class="cinema-copy"><div class="eyebrow">IN THE SPOTLIGHT · STORYBOARD</div><h2>작은 빛이<br>모이는 순간</h2><p>일상의 호기심이 하나의 컬렉션이 되기까지.<br>30초 브랜드 필름의 첫 번째 이야기.</p><button class="pill" data-open="v1">영상 기획안 보기 <span>↗</span></button></div><img src="${heroImage}" alt="브랜드 필름의 파스텔 별빛 키 비주얼"></section><div class="section-top"><h2>The motion shelf</h2><span class="sample-label">영상 업로드 전 · 임시 기획안</span></div><section class="products film">${items.filter(x=>x.type===page).map(card).join('')}</section>`;}
-if(page==='project'){target.innerHTML=heading('THE FINAL EDIT','From idea <span class="serif">to impact.</span>','배운 것을 연결하고, 커머스의 다음 가능성을 제안합니다.','01')+`<section class="final-feature"><div class="final-cover"><span>FINAL PROJECT / 2026</span><h2>COMMERCE<br>MEETS<br><i>AI.</i></h2><img src="${heroImage}" alt="AI 커머스 프로젝트의 유리 별 오브젝트"><span>A NEW WAY TO DISCOVER.</span></div><div class="final-details"><div class="eyebrow">CONCEPT PROJECT · 기획 단계</div><h2>취향을 발견하는<br>AI 커머스</h2><p>수많은 상품 속에서 ‘나에게 맞는 것’을 발견하는 경험.<br>AI를 활용한 상품 탐색과 콘텐츠 제작을 하나의 고객 여정으로 연결하는 프로젝트입니다.</p><dl class="specs"><div><dt>교육 과정</dt><dd>한국경제 AI 교육</dd></div><div><dt>프로젝트 유형</dt><dd>개인 프로젝트 · 임시 기획안</dd></div><div><dt>작업 범위</dt><dd>리서치, 콘텐츠 기획, 비주얼 제작</dd></div><div><dt>결과물</dt><dd>기사 · 브랜드 이미지 · 영상 기획</dd></div></dl><button class="pill" data-open="f1">프로젝트 자세히 보기 <span>↗</span></button></div></section><div class="section-top"><h2>Behind the project</h2></div><section class="process"><article><span>01</span><h3>Discover · 문제를 발견하다</h3><p>고객의 탐색 과정과 콘텐츠 제작 흐름에서 반복되는 불편을 찾아봅니다.</p></article><article><span>02</span><h3>Make · 아이디어를 실험하다</h3><p>하나의 콘셉트를 기사, 이미지, 영상으로 확장하며 AI와 함께 제작합니다.</p></article><article><span>03</span><h3>Connect · 경험을 연결하다</h3><p>각 결과물을 고객 여정에 연결하고, 더 나은 쇼핑 경험을 제안합니다.</p></article></section>`;}}
+if(page==='image'){
+  const works=items.filter(x=>x.type==='image');
+  target.innerHTML=heading('PERSONAL AI WORKS','AI','AI로 상상을 구체화하는 개인작업과 실험.',String(works.length).padStart(2,'0'))+
+    `<div class="live-company-toolbar"><div class="toolbar" aria-label="AI 작업 소카테고리">${['전체','캐릭터','영상','이미지','앱'].map((category,i)=>`<button class="filter ${i===0?'active':''}" data-ai-filter="${category}" aria-pressed="${i===0}">${category}</button>`).join('')}</div><span id="ai-count" role="status" aria-live="polite">${works.length}개의 프로젝트</span></div><section id="ai-works" aria-label="AI 개인작업">${works.map(aiWork).join('')}</section><p id="ai-empty" class="live-empty" hidden>아직 등록된 프로젝트가 없습니다.</p>`;
+}
+if(page==='Live'){
+  const works=items.filter(x=>x.type==='Live');
+  target.innerHTML=heading('LIVE COMMERCE','Live','콘텐츠 참여를 구매로 연결하는 라이브 기획과 연출.',String(works.length).padStart(2,'0'))+
+  `<div class="live-company-toolbar"><div class="toolbar" aria-label="근무 회사별 방송 분류">${['전체','티몬','무신사','배민'].map((company,i)=>`<button class="filter ${i===0?'active':''}" data-live-filter="${company}" aria-pressed="${i===0}">${company}</button>`).join('')}</div><span id="live-count" role="status" aria-live="polite">${works.length}개의 방송</span></div>
+  <aside id="musinsa-experience" class="live-experience"><div><div class="eyebrow">MUSINSA LIVE / 2021.07–2025.07</div><h2>무신사 라이브</h2></div><p>약 91회의 라이브를 기획·연출했습니다. 상품 소개부터 콘서트·팝업·패션쇼·크리에이터 협업까지 다양한 콘텐츠 포맷을 라이브커머스와 결합하고, 방송 이후 시청 지표와 매출 데이터를 분석했습니다.</p></aside>
+  <section id="live-works" aria-label="대표 라이브 방송">${works.map(liveWork).join('')}</section><p id="live-empty" class="live-empty" hidden>아직 등록된 방송이 없습니다.</p>`;
+}
+if(page==='project'){
+  const works=items.filter(x=>x.type==='project');
+  target.innerHTML=heading('COMMERCIAL FILMS','Commercial','브랜드의 이야기를 영상으로 만드는 작업들.',String(works.length).padStart(2,'0'))+works.map(commercialWork).join('');
+}}
+
 renderPage();
 const dialog=document.getElementById('detail');const modal=dialog.querySelector('.modal-body');
-function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;modal.innerHTML=`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p><p class="sample-note">${x.type==='Live'?'임시 영상 기획안입니다. 실제 영상은 아직 업로드되지 않았습니다.':x.type==='image'?'포트폴리오 구성을 위한 AI 생성 이미지와 임시 프로젝트 설명입니다.':'포트폴리오 구성을 위한 임시 콘텐츠입니다.'}</p>`;if(!dialog.open)dialog.showModal();}
+function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;modal.innerHTML=x.type==='image'&&x.videos?aiWork(x):x.type==='Live'&&x.youtubeId?liveWork(x):x.youtubeId?commercialWork(x):`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p><p class="sample-note">${x.type==='Live'?'임시 영상 기획안입니다. 실제 영상은 아직 업로드되지 않았습니다.':x.type==='image'?'포트폴리오 구성을 위한 AI 생성 이미지와 임시 프로젝트 설명입니다.':'포트폴리오 구성을 위한 임시 콘텐츠입니다.'}</p>`;if(!dialog.open)dialog.showModal();}
 function showSaved(){modal.innerHTML='<div class="eyebrow">YOUR LITTLE COLLECTION</div><h2>My picks</h2>'+(!saved.length?'<p class="empty">아직 담은 작품이 없어요.<br>컬렉션에서 마음에 드는 작품의 ♡를 눌러보세요.</p>':saved.map(id=>{const x=items.find(x=>x.id===id);return `<div class="saved-row"><button data-open="${id}">${x.title} ↗</button><button data-remove="${id}" aria-label="${x.title} 저장 취소">삭제</button></div>`}).join(''))+'<p class="sample-note">관심 작품은 이 브라우저에 저장됩니다.</p>';if(!dialog.open)dialog.showModal();}
 function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];try{localStorage.setItem('blue-basket-saved',JSON.stringify(saved))}catch{}document.getElementById('saved-count').textContent=saved.length;document.querySelectorAll('[data-save]').forEach(b=>{const active=saved.includes(b.dataset.save);b.setAttribute('aria-pressed',active)});}
-document.addEventListener('click',e=>{const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
-document.getElementById('show-saved').addEventListener('click',showSaved);dialog.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
+document.addEventListener('click',e=>{const play=e.target.closest('[data-play-video]');if(play)playPortfolioVideo(play);const aiFilter=e.target.closest('[data-ai-filter]');if(aiFilter)filterAi(aiFilter.dataset.aiFilter);const company=e.target.closest('[data-live-filter]');if(company)filterLive(company.dataset.liveFilter);const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
+document.getElementById('show-saved').addEventListener('click',showSaved);dialog.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>modal.replaceChildren());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();
