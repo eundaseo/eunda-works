@@ -132,6 +132,11 @@ body:before{display:none}
 .ai-character-intro>img{width:105px;height:105px;object-fit:cover;border-radius:50%;border:2px solid #d8e1e9;flex-shrink:0}
 .ai-handle{font-size:22px;color:#2f4b62}.ai-character-intro p{font-size:12px;line-height:1.8;color:#657d8f;margin:9px 0 12px}.ai-contribution{display:inline-block;padding:6px 9px;background:#e5ecf3;border:1px solid #c3d1df;color:#4c687d;font-size:10px}
 .ai-videos{padding-bottom:28px;border-bottom:1px solid #d7dfe5}
+.ai-character-intro>div{min-width:0}
+.ai-channel-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ai-channel-links a{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 12px;border:1px solid #b8cbdc;background:#f7fafc;color:#345c7a;font-size:12px;text-decoration:none}
+.ai-channel-links a:hover{background:#e5edf4;border-color:#7598b6}
+.ai-channel-links a:focus-visible{outline:2px solid #246a9e;outline-offset:3px}
 .ai-episodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .ai-episode{min-width:0}.ai-episode-title{display:flex;align-items:center;gap:10px;margin:8px 0 12px}.ai-episode-title>span{font-size:9px;color:#8a9aa8;letter-spacing:1px}.ai-work h4{font-weight:400;font-size:16px;color:#38586e;margin:0}
 .ai-episode .commercial-play-disc{width:52px;height:52px;font-size:19px}.ai-episode .commercial-play-label{font-size:8px;letter-spacing:1px}

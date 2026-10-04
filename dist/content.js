@@ -174,6 +174,10 @@
   "subtitle": "인간의 음식을 연구하는 호랑이",
   "date": "2026.07",
   "handle": "@kimhodie",
+  "channels": [
+    { "label": "Instagram", "url": "https://www.instagram.com/kimhodie" },
+    { "label": "YouTube", "url": "https://www.youtube.com/@kimhodie" }
+  ],
   "projectKind": "개인작업",
   "contribution": "100%",
   "image": "assets/ai/kimhodie-profile.webp",
