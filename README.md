@@ -95,3 +95,18 @@ The supplied 동숲 profile illustration is preserved and displayed with respons
 Applied the approved A observatory composition with B's subtle blue-black palette. The wallpaper is now vector-based, with three sparse elliptical orbits, slowly moving planets, a light grain texture and 72 stars that fade in and out independently. Reduced-motion preferences pause orbital movement and show static stars. Replaced all category icons with matching simple silver pixel SVGs, removed home display typography, and made START text-only. The approved starburst cursor and its fading trail remain active. Verified desktop/mobile layout, star animation, reduced-motion pause/resume, START menu, Live content and asset loading; no horizontal overflow or browser errors. Changes are local pending publication.
 
 The final icon revision uses filled retro pixel art with a shared sky-blue, sage-green and cool silver palette: an Earth without a stand or meridian ring, camcorder, clapperboard and desktop computer with a generated star. Shortcut art is centered at equal sizes; labels have no background box and use a dark text outline with a closer icon-to-label gap.
+
+## Contact form and cleanup · 2026-10-05
+
+- My universe의 "문의 보내기" 버튼은 사이트 안에서 문의 창을 엽니다. 전송은 FormSubmit(`https://formsubmit.co/ajax/<email>`)을 통해 `profile.email`로 전달됩니다. 처음 전송 시 해당 메일함으로 오는 FormSubmit 활성화 메일을 한 번 승인해야 이후 문의가 수신됩니다. 전송 실패 시 메일 주소 링크를 안내합니다.
+- 프로필 이미지는 배경을 제거한 `assets/profile/daeun-avatar-cutout.png`를 사용합니다. 원본은 `daeun-avatar.webp`.
+- 임시 기사(Note) 3편, 홈 샘플 컬렉션, 임시 안내 문구를 삭제했습니다. `article.html`, `artcle.html`은 `introduce.html`로 이동합니다.
+
+## Live page structure · 2026-10-06
+
+- `content.js`의 `liveCompanies`에 회사별 소개(요약·역할·수치·툴)와 `selected`(Selected Live Projects)를 넣습니다. 대표 방송은 `items`의 `type:'Live'` 항목이며 `employer`로 회사와 연결되고 `order` 순으로 정렬됩니다.
+- Live 페이지는 회사 소개 → 대표 방송 카드 → Selected 목록(펼침형) 순서입니다. 카드를 누르면 상세 창이 열리고 주소에 `#항목id`가 붙어 해당 방송을 바로 공유할 수 있습니다.
+- `youtubeId`가 없는 방송은 하이라이트 영역에 "영상 준비 중"이 표시됩니다. URL이 생기면 `youtubeId`와 `videoUrl`만 추가하면 됩니다.
+- 회사가 2곳 이상 등록되면 상단에 회사별 필터 버튼이 자동으로 나타납니다.
+- Live "전체"는 회사별 요약 + 대표 방송 3개(`"featured": true`) + "전체 보기" 버튼으로 구성됩니다. 회사 버튼을 누르면 해당 회사의 전체 내용이 보입니다.
+- `liveCompanies`에서 `"layout": "showcase"`인 회사(티몬)는 카드·상세 창 대신 휴대폰 목업(`mockups`)과 Background/Role/Execution/Results를 펼친 형태로 보여줍니다.
