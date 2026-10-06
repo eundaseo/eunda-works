@@ -250,6 +250,14 @@
           { "value": "100%", "label": "기획·현장 연출·운영 기여도" }
         ],
         "tools": ["XSplit", "Premiere Pro", "After Effects", "Illustrator"]
+      },
+      {
+        "id": "배민",
+        "name": "배민라이브",
+        "eng": "BAEMIN LIVE",
+        "period": "2021.04–2021.07",
+        "tagline": "프리랜서 라이브 작업 · 우아한형제들",
+        "comingSoon": true
       }
     ],
     // 작업물을 추가할 때 아래 객체 하나를 복사해 id, type, tag, title, desc, image, body를 바꾸세요.
@@ -397,7 +405,7 @@
     { "label": "숏폼 조회수", "value": "약 2.6만 회", "note": "브랜드 계정 기준 · 출연진 계정 약 4.8천 회" }
   ],
   "gallery": [
-    { "src": "assets/live/satur-01.jpg", "caption": "상품 정보 자막과 착장 클로즈업" },
+    { "src": "assets/live/satur-01.jpg", "caption": "세터 쇼룸 방문기 숏폼 제작", "youtubeId": "87gQDOVxKgE", "url": "https://youtube.com/shorts/87gQDOVxKgE?feature=share" },
     { "src": "assets/live/satur-02.jpg", "caption": "출연진의 상품 소개" },
     { "src": "assets/live/satur-03.jpg", "caption": "착장 스타일링 제안" }
   ],
@@ -487,7 +495,7 @@
   "date": "2025.01",
   "client": "무신사 뷰티",
   "desc": "컬러 비교로 세트 구매를 이끈 뷰티 라이브",
-  "image": "assets/live/espoir-02.jpg",
+  "image": "assets/live/espoir-capture-03.jpg",
   "summary": "에스쁘아의 베스트셀러인 비글로우 볼륨 쿠션과 파운데이션을 소개하는 뷰티 라이브를 진행했습니다. 신상 컬러인 3C 웨딩피치를 중심으로 여러 베이스 제품의 컬러와 차이를 명확하게 전달하고, 고객의 피부 톤과 사용 목적에 맞는 상품 선택 및 세트 구매를 유도하는 것이 핵심 과제였습니다.",
   "roles": ["라이브 구성 기획", "상품·혜택 구성 조율", "컬러 비교 배너 제작", "방송 그래픽 디자인", "현장 연출", "방송 데이터 리뷰 작성"],
   "execution": [
@@ -502,9 +510,10 @@
     { "label": "구매자 시청 시간", "value": "18분 43초", "note": "평균 대비 약 63.9% 증가" }
   ],
   "gallery": [
-    { "src": "assets/live/espoir-01.jpg", "caption": "라이브 진행 화면" },
-    { "src": "assets/live/espoir-02.jpg", "caption": "3C 웨딩피치 컬러 칩과 시연" },
-    { "src": "assets/live/espoir-03.jpg", "caption": "컬러 비교 배너로 톤 안내" }
+    { "src": "assets/live/espoir-capture-01.jpg", "caption": "에스쁘아 베이스·립 라인업과 함께한 라이브 진행" },
+    { "src": "assets/live/espoir-capture-02.jpg", "caption": "비글로우 NEW 파운데이션 컬러 비교 배너" },
+    { "src": "assets/live/espoir-capture-03.jpg", "caption": "3C 웨딩피치 컬러 칩과 피부 표현 시연" },
+    { "src": "assets/live/espoir-capture-04.jpg", "caption": "립 컬러 칩으로 연계 상품 제안" }
   ],
   "body": "에스쁘아 뷰티 라이브 (2025.01). 총매출 약 5,500만 원(목표 대비 121%), 구매 전환율 3.7%, 구매자 시청 시간 18분 43초."
 },
@@ -518,7 +527,7 @@
   "date": "2019.03",
   "client": "티비온 라이브",
   "desc": "목적별 큐레이션으로 1시간 매출 1억 달성",
-  "image": "assets/live/sono-02.jpg",
+  "image": "assets/live/sono-thumb.jpg",
   "summary": "소노호텔앤리조트 객실과 워터파크를 함께 이용할 수 있는 패키지 티켓을 판매하는 라이브를 진행했습니다. 천안·경주·단양·청송 등 여러 지점의 특성과 복잡한 이용 정보를 제한된 방송 시간 안에 명확하게 전달하고, 가족 단위 고객이 여행 목적에 맞는 상품을 쉽게 선택하도록 돕는 것이 핵심 과제였습니다.",
   "roles": ["방송 구성 기획", "상품 및 할인 혜택 조율", "출연진 섭외", "큐시트 작성", "현장 연출"],
   "execution": [
@@ -550,7 +559,7 @@
   "date": "2019.11",
   "client": "티비온 라이브",
   "desc": "생생한 현장 참여 라이브",
-  "image": "assets/live/ograe-02.jpg",
+  "image": "assets/live/ograe-thumb.jpg",
   "summary": "숟가락이 동봉된 파우치형 그래놀라 제품으로, 별도의 식기 없이 간편하게 즐길 수 있다는 점이 핵심 특징이었습니다. 라이브 화면만으로 전달하기 어려운 제품의 맛과 편의성을 실제 사용 상황과 생생한 반응을 통해 설득력 있게 보여주는 것이 핵심 과제였습니다.",
   "roles": ["방송 구성 기획", "상품 및 할인 혜택 조율", "출연진 섭외", "큐시트 작성", "현장 연출"],
   "execution": [
@@ -581,7 +590,7 @@
   "date": "2019.04–2019.08",
   "client": "셀렉트(C2C) 신사업",
   "desc": "쉽고 빠른 모바일 라이브의 시작",
-  "image": "assets/live/select-02.jpg",
+  "image": "assets/live/select-thumb.jpg",
   "summary": "기존 스튜디오 중심 라이브의 제작 부담과 장소 제약을 낮추고, 판매자가 모바일로 쉽고 빠르게 방송할 수 있는 새로운 라이브 방식이 필요했습니다. 셀렉트(C2C) 신사업의 초기 테스트 단계에 참여해 판매자와 시청자가 실시간으로 소통하는 모바일 라이브의 운영을 지원했습니다.",
   "roles": ["셀렉트 라이브 초기 운영 지원", "‘리코야 택배왔SHOW’ 상품 선정 및 방송 운영", "라이브 상품 할인율 협의", "모바일 송출·카메라·채팅 운영", "오프닝 타이틀 제작"],
   "execution": [

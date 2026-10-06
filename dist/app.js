@@ -40,15 +40,14 @@ function liveWork(x){
     </div>
     <section class="live-role"><div class="eyebrow">02 / ROLE</div><h3>담당 역할</h3><ul>${x.roles.map(role=>`<li>${role}</li>`).join('')}</ul></section>
     <section class="commercial-execution"><div class="eyebrow">03 / EXECUTION</div><h3>기획과 현장 연출</h3><div class="execution-grid">${x.execution.map((e,i)=>`<div><span class="execution-number">0${i+1}</span>${e.title?`<h4>${e.title}</h4>`:''}<p>${e.text||e}</p></div>`).join('')}</div></section>
-    <section class="live-gallery"><div class="eyebrow">04 / ON AIR</div><h3>방송 캡처</h3><div class="live-stills">${x.gallery.map(g=>`<figure><a href="${g.src}" target="_blank" rel="noopener" aria-label="${g.caption} 원본 캡처 크게 보기"><img src="${g.src}" alt="${g.caption}" loading="lazy" decoding="async"></a><figcaption>${g.caption}<span aria-hidden="true"> ↗</span></figcaption></figure>`).join('')}</div></section>
+    <section class="live-gallery"><div class="eyebrow">04 / ON AIR</div><h3>방송 캡처</h3><div class="live-stills">${x.gallery.map(g=>g.youtubeId?`<figure class="live-still-video"><div class="live-still-frame" data-video-frame><button type="button" class="commercial-play" data-play-video="${g.youtubeId}" aria-label="${g.caption} 영상 재생"><img src="${g.src}" alt="${g.caption}" loading="lazy" decoding="async"><span class="live-still-play" aria-hidden="true">▶</span></button></div><figcaption>${g.caption}<small>YouTube Shorts · <a href="${g.url}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></small></figcaption></figure>`:`<figure><a href="${g.src}" target="_blank" rel="noopener" aria-label="${g.caption} 원본 캡처 크게 보기"><img src="${g.src}" alt="${g.caption}" loading="lazy" decoding="async"></a><figcaption>${g.caption}<span aria-hidden="true"> ↗</span></figcaption></figure>`).join('')}</div></section>
     ${x.pressImage?`<details class="live-press"><summary>협업 컬렉션 완판 관련 기사 캡처 보기</summary><p>방송 이후 협업 컬렉션과 완판 소식을 소개한 기사 캡처입니다.</p><a href="${x.pressImage}" target="_blank" rel="noopener" aria-label="기사 캡처 크게 보기"><img src="${x.pressImage}" alt="${x.title} 협업 컬렉션 완판 기사 캡처" loading="lazy"></a></details>`:''}
   </article>`;
 }
 const isShowcase=x=>liveCompanies.find(c=>c.id===x.employer)?.layout==='showcase';
 function liveCard(x,i){
-  const action=isShowcase(x)?`data-live-jump="${x.id}"`:`data-open="${x.id}" aria-haspopup="dialog"`;
-  return `<button type="button" class="live-card" ${action} aria-label="${x.title} 방송 상세 보기">
-    <span class="live-card-thumb"><img src="${x.image}" alt="" loading="lazy" decoding="async"><span class="live-card-no">0${i+1}</span></span>
+  return `<button type="button" class="live-card" data-open="${x.id}" aria-haspopup="dialog" aria-label="${x.title} 방송 상세 보기">
+    ${isShowcase(x)?`<span class="live-card-thumb is-phone"><span class="phone-mockup"><img src="${x.image}" alt="" loading="lazy" decoding="async"></span><span class="live-card-no">0${i+1}</span></span>`:`<span class="live-card-thumb"><img src="${x.image}" alt="" loading="lazy" decoding="async"><span class="live-card-no">0${i+1}</span></span>`}
     <span class="live-card-body"><span class="live-card-meta">${x.tag} · ${x.date}</span><strong class="live-card-title">${x.title}</strong><span class="live-card-desc">${x.desc}</span>
     <span class="live-card-metrics">${x.metrics.slice(0,2).map(m=>`<span><small>${m.label}</small><b>${m.value}</b></span>`).join('')}</span>
     <span class="live-card-more">자세히 보기 <span aria-hidden="true">↗</span></span></span>
@@ -57,12 +56,14 @@ function liveCard(x,i){
 function liveSelected(list){
   return `<section class="live-selected"><div class="live-subhead"><h3>Selected Live Projects</h3><span>그 외 주요 라이브 · 눌러서 펼쳐보기</span></div><div class="live-selected-list">${list.map(s=>`<details class="live-selected-item"><summary><span class="live-selected-date">${s.date}</span><strong>${s.title}</strong><span class="live-selected-metrics">${s.metrics.map(m=>`<span><small>${m.label}</small><b>${m.value}</b><em>${m.note}</em></span>`).join('')}</span><span class="live-selected-toggle" aria-hidden="true"></span></summary><div class="live-selected-detail${s.image?'':' no-image'}"><ul>${s.points.map(t=>`<li>${t}</li>`).join('')}</ul>${s.image?`<img src="${s.image}" alt="${s.title} 라이브 방송 캡처" loading="lazy" decoding="async">`:''}</div></details>`).join('')}</div></section>`;
 }
-function liveShowcase(x,i){
+// TVON broadcasts have no highlight video, so their viewer shows phone mockups beside the story.
+function liveShowcase(x){
+  const i=items.filter(w=>w.type==='Live'&&w.employer===x.employer).sort((a,b)=>(a.order||99)-(b.order||99)).indexOf(x);
   const phones=x.mockups.map((src,n)=>`<span class="phone-mockup${x.mockups.length>1&&n===Math.floor(x.mockups.length/2)?' is-front':''}"><img src="${src}" alt="${x.title} 라이브 방송 캡처 ${n+1}" loading="lazy" decoding="async"></span>`).join('');
-  return `<article class="live-showcase" id="${x.id}" data-live-work="${x.id}">
+  return `<article class="live-showcase" data-live-work="${x.id}">
     <div class="live-showcase-phones phones-${x.mockups.length}">${phones}</div>
     <div class="live-showcase-copy">
-      <div class="eyebrow">대표방송 0${i+1} ／ ${x.date}</div><p class="live-showcase-tagline">${x.desc}</p><h3>${x.title}</h3>
+      <div class="live-showcase-head"><div><div class="eyebrow">${x.employer} ／ 대표방송 0${i+1} ／ ${x.date}</div><p class="live-showcase-tagline">${x.desc}</p><h3>${x.title}</h3></div>${heart(x.id)}</div>
       <section><h4>Background</h4><p>${x.summary}</p></section>
       <section><h4>Role</h4><p>${x.roles.join(', ')}</p></section>
       <section><h4>Execution</h4><ul>${x.execution.map(e=>`<li>${e.text||e}</li>`).join('')}</ul></section>
@@ -71,37 +72,33 @@ function liveShowcase(x,i){
   </article>`;
 }
 function liveCompany(c,works){
-  const showcase=c.layout==='showcase';
-  const list=showcase?works.map(liveShowcase).join(''):`<div class="live-card-grid">${works.map(liveCard).join('')}</div>`;
+  const list=`<div class="live-card-grid${works.length===3?' live-card-grid-3':''}">${works.map(liveCard).join('')}</div>`;
   return `<section class="live-company" data-live-company="${c.id}" hidden>
     <header class="live-company-intro"><div><div class="eyebrow">${c.eng} / ${c.period}</div><h2>${c.name}</h2><p class="live-company-tagline">${c.tagline}</p><p>${c.summary}</p></div><dl class="live-company-stats">${c.stats.map(st=>`<div><dt>${st.label}</dt><dd>${st.value}</dd></div>`).join('')}</dl></header>
     <div class="live-company-meta"><div><span class="eyebrow">ROLE</span><p>${c.role}</p></div><div><span class="eyebrow">TOOLS</span><ul>${c.tools.map(t=>`<li>${t}</li>`).join('')}</ul></div></div>
-    ${works.length?`<section class="live-featured"><div class="live-subhead"><h3>대표 방송</h3><span>${String(works.length).padStart(2,'0')}편${showcase?'':' · 카드를 누르면 상세 내용이 열려요'}</span></div>${list}</section>`:''}
+    ${works.length?`<section class="live-featured"><div class="live-subhead"><h3>대표 방송</h3><span>${String(works.length).padStart(2,'0')}편 · 카드를 누르면 상세 내용이 열려요</span></div>${list}</section>`:''}
     ${c.selected?.length?liveSelected(c.selected):''}
   </section>`;
 }
-// 전체: a short summary per company with a few highlights, linking to each company's full view.
+// 전체: a text-only index of companies; each card leads to that company's full view.
 function liveOverview(companies,works){
-  return `<div class="live-overview" data-live-company="전체">${companies.map(c=>{
+  return `<div class="live-overview" data-live-company="전체"><div class="live-index">${companies.map((c,i)=>{
     const own=works.filter(x=>x.employer===c.id);
-    const featured=own.filter(x=>x.featured);
-    const picks=(featured.length?featured:own).slice(0,3);
+    const ready=own.length||c.selected?.length;
     const count=own.length+(c.selected?.length||0);
-    return `<section class="live-overview-company">
-      <header class="live-overview-head"><div><div class="eyebrow">${c.eng} / ${c.period}</div><h2>${c.name}</h2><p>${c.tagline}</p></div><dl>${c.stats.map(st=>`<div><dt>${st.label}</dt><dd>${st.value}</dd></div>`).join('')}</dl></header>
-      <div class="live-card-grid live-card-grid-3">${picks.map(liveCard).join('')}</div>
-      <button type="button" class="live-more" data-live-filter="${c.id}"><span><strong>${c.name} 전체 보기</strong><small>방송 ${count}개 · 기획 의도와 성과까지</small></span><b aria-hidden="true">→</b></button>
-    </section>`;}).join('')}</div>`;
+    const rows=own.map(x=>`<li><button type="button" data-open="${x.id}" aria-haspopup="dialog"><span>${x.title}</span><small>${x.metrics?.[0]?.value||''}</small><em>${x.date}</em></button></li>`).join('');
+    return `<section class="live-index-card${ready?'':' is-soon'}">
+      <div class="live-index-top"><span class="live-index-no">0${i+1}</span><span class="eyebrow">${c.eng}</span></div>
+      <h2>${c.name}</h2><p class="live-index-period">${c.period}</p><p class="live-index-tagline">${c.tagline}</p>
+      ${c.stats?`<dl>${c.stats.map(st=>`<div><dt>${st.label}</dt><dd>${st.value}</dd></div>`).join('')}</dl>`:''}
+      ${rows?`<ul class="live-index-list" aria-label="${c.name} 대표 방송">${rows}</ul>`:''}
+      ${ready?`<button type="button" class="live-more" data-live-filter="${c.id}"><span><strong>전체 보기</strong><small>방송 ${count}개 · 기획 의도와 성과까지</small></span><b aria-hidden="true">→</b></button>`:'<p class="live-index-soon">자세한 내용은 준비 중이에요.</p>'}
+    </section>`;}).join('')}</div></div>`;
 }
 function filterLive(company,scroll=true){
   document.querySelectorAll('.live-company-toolbar [data-live-filter]').forEach(button=>{const active=button.dataset.liveFilter===company;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
   document.querySelectorAll('#live-companies>[data-live-company]').forEach(section=>{section.hidden=section.dataset.liveCompany!==company;});
   if(scroll)document.querySelector('.live-company-toolbar')?.scrollIntoView({behavior:'smooth',block:'start'});
-}
-function jumpToLive(id){
-  const x=items.find(item=>item.id===id);if(!x)return;
-  filterLive(x.employer,false);
-  requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}));
 }
 function aiWork(x){
   return `<article class="commercial-work ai-work" data-ai-category="${x.tag}">
@@ -196,7 +193,7 @@ if(page==='Live'){
   const companies=liveCompanies.filter(c=>works.some(x=>x.employer===c.id)||c.selected?.length);
   target.innerHTML=heading('LIVE COMMERCE','Live','콘텐츠 참여를 구매로 연결하는 라이브 기획과 연출.',String(works.length).padStart(2,'0'))+
   `<div class="live-company-toolbar"><div class="toolbar" aria-label="회사별 라이브 분류">${['전체',...companies.map(c=>c.id)].map((company,i)=>`<button class="filter ${i===0?'active':''}" data-live-filter="${company}" aria-pressed="${i===0}">${company}</button>`).join('')}</div></div>`+
-  `<div id="live-companies">${liveOverview(companies,works)}${companies.map(c=>liveCompany(c,works.filter(x=>x.employer===c.id))).join('')}</div>`;
+  `<div id="live-companies">${liveOverview(liveCompanies,works)}${companies.map(c=>liveCompany(c,works.filter(x=>x.employer===c.id))).join('')}</div>`;
 }
 if(page==='project'){
   const works=items.filter(x=>x.type==='project');
@@ -205,14 +202,14 @@ if(page==='project'){
 
 renderPage();
 const dialog=document.getElementById('detail');const modal=dialog.querySelector('.modal-body');
-function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;dialog.classList.toggle('dialog-wide',x.type==='Live');if(x.type==='Live'&&page==='Live')history.replaceState(null,'',`#${id}`);modal.innerHTML=x.type==='image'&&x.videos?aiWork(x):x.type==='Live'?liveWork(x):x.youtubeId?commercialWork(x):`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p>`;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
+function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;dialog.classList.toggle('dialog-wide',x.type==='Live');if(x.type==='Live'&&page==='Live')history.replaceState(null,'',`#${id}`);modal.innerHTML=x.type==='image'&&x.videos?aiWork(x):x.type==='Live'?(isShowcase(x)?liveShowcase(x):liveWork(x)):x.youtubeId?commercialWork(x):`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p>`;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
 function showSaved(){dialog.classList.remove('dialog-wide');modal.innerHTML='<div class="eyebrow">YOUR LITTLE COLLECTION</div><h2>My picks</h2>'+(!saved.length?'<p class="empty">아직 담은 작품이 없어요.<br>컬렉션에서 마음에 드는 작품의 ♡를 눌러보세요.</p>':saved.map(id=>{const x=items.find(x=>x.id===id);return `<div class="saved-row"><button data-open="${id}">${x.title} ↗</button><button data-remove="${id}" aria-label="${x.title} 저장 취소">삭제</button></div>`}).join(''))+'<p class="sample-note">관심 작품은 이 브라우저에 저장됩니다.</p>';if(!dialog.open)dialog.showModal();}
 function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];try{localStorage.setItem('blue-basket-saved',JSON.stringify(saved))}catch{}document.getElementById('saved-count').textContent=saved.length;document.querySelectorAll('[data-save]').forEach(b=>{const active=saved.includes(b.dataset.save);b.setAttribute('aria-pressed',active)});}
-document.addEventListener('click',e=>{const play=e.target.closest('[data-play-video]');if(play)playPortfolioVideo(play);const aiFilter=e.target.closest('[data-ai-filter]');if(aiFilter)filterAi(aiFilter.dataset.aiFilter);const company=e.target.closest('[data-live-filter]');if(company)filterLive(company.dataset.liveFilter);const jump=e.target.closest('[data-live-jump]');if(jump)jumpToLive(jump.dataset.liveJump);const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
+document.addEventListener('click',e=>{const play=e.target.closest('[data-play-video]');if(play)playPortfolioVideo(play);const aiFilter=e.target.closest('[data-ai-filter]');if(aiFilter)filterAi(aiFilter.dataset.aiFilter);const company=e.target.closest('[data-live-filter]');if(company)filterLive(company.dataset.liveFilter);const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
 document.getElementById('show-saved').addEventListener('click',showSaved);dialog.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>{modal.replaceChildren();if(location.hash)history.replaceState(null,'',location.pathname+location.search);});dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 
 // A shared link such as Live.html#live-musinsa-satur opens that broadcast directly.
-if(page==='Live'&&location.hash){const x=items.find(x=>x.type==='Live'&&x.id===location.hash.slice(1));if(x){if(isShowcase(x))jumpToLive(x.id);else openItem(x.id);}}
+if(page==='Live'&&location.hash){const x=items.find(x=>x.type==='Live'&&x.id===location.hash.slice(1));if(x)openItem(x.id);}
 
 if(document.modelContext?.registerTool){
  const lifecycle=new AbortController();
