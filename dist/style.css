@@ -301,3 +301,24 @@ dialog.dialog-wide{width:min(980px,calc(100% - 28px))}
 .live-still-video figcaption a{color:#075d97}.live-still-video figcaption small{display:block;font-size:9px;color:#8a9dac;margin-top:2px}
 .live-still-frame{position:relative;aspect-ratio:9/16;background:#131920;border:1px solid #c8d4dd;overflow:hidden}.live-still-frame .commercial-play{position:absolute;inset:0;width:100%;height:100%;padding:0;background:none}.live-still-frame img{width:100%;height:100%;object-fit:cover;border:0}.live-still-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.live-still-frame .commercial-play:hover .live-still-play{background:#075d97}
 .live-still-video figcaption small a{color:#075d97}
+
+/* Commercial: 세로 숏폼이 여러 편인 작업 */
+.commercial-shorts{display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+.commercial-shorts figure{margin:0;width:min(100%,260px)}
+.commercial-shorts figcaption{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:#728491;padding-top:10px}
+.commercial-shorts figcaption a{color:#365c78;text-decoration:underline;text-underline-offset:3px}
+.commercial-results.no-metric{grid-template-columns:1fr}
+.commercial-index-thumb{position:relative;display:block;width:calc(100% + 40px);margin:-22px -20px 18px;aspect-ratio:16/9;padding:0;border:0;border-bottom:1px solid #c6d1da;background:#131920;overflow:hidden;cursor:pointer}
+.commercial-index-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}.commercial-index-thumb:hover img{transform:scale(1.04)}
+.commercial-index-thumb .live-card-no{position:absolute;left:12px;top:10px}
+.commercial-index .live-index-card h2{margin-top:12px}
+/* 세로 숏폼 썸네일(4:3 안의 세로 영상)을 나란히 잘라 보여줍니다. */
+.commercial-index-shorts{display:flex;gap:2px;width:100%;height:100%}
+.commercial-index-shorts>span{flex:1;min-width:0;overflow:hidden}
+.commercial-index-shorts img{transform:scale(1.6)}
+.commercial-index-thumb:hover .commercial-index-shorts img{transform:scale(1.66)}
+/* Live 전체: Commercial 카드와 같은 글 배열(번호 배지 + 영문 라벨 → 이름 → 기간 → 한 줄 소개) */
+.live-index:not(.commercial-index) .live-index-top{justify-content:flex-start;gap:10px}
+.live-index:not(.commercial-index) .live-index-no{font-size:11px;letter-spacing:1px;color:#fff;background:#0b2238b3;padding:4px 7px;line-height:1}
+.live-index:not(.commercial-index) .live-index-card.is-soon .live-index-no{background:#8a9dac}
+.live-index:not(.commercial-index) .live-index-card h2{margin-top:16px}

@@ -10,19 +10,19 @@ const lineBreaks=value=>value.replace(/\n/g,'<br>');
 function commercialWork(x){
   return `<article class="commercial-work">
     <header class="commercial-title"><div><div class="eyebrow">${x.client} <span>／ ${x.date}</span></div><h2>${x.title}</h2><p>${x.desc}</p></div>${heart(x.id)}</header>
-    <div class="commercial-video" data-video-frame>
+    ${x.videos?`<div class="commercial-shorts">${x.videos.map(v=>`<figure><div class="commercial-video live-vertical-video" data-video-frame><button class="commercial-play" data-play-video="${v.youtubeId}" aria-label="${x.title} ${v.label} 영상 재생"><img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="${x.client} ${x.title} ${v.label} 영상 썸네일" referrerpolicy="no-referrer" decoding="async"><span class="commercial-play-disc" aria-hidden="true">▶</span><span class="commercial-play-label">PLAY SHORTS</span></button></div><figcaption><span>${v.label}</span><a href="${v.url}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></figcaption></figure>`).join('')}</div><div class="commercial-video-caption"><span>${x.tag} · ${x.date} · 영상 ${x.videos.length}편</span></div>`:`<div class="commercial-video" data-video-frame>
       <button class="commercial-play" data-play-video="${x.youtubeId}" aria-label="${x.title} 영상 재생">
-        <img src="https://i.ytimg.com/vi/${x.youtubeId}/maxresdefault.jpg" alt="29CM × 재지팩트 Lifes Like 10주년 굿즈 티저 영상 썸네일" referrerpolicy="no-referrer" decoding="async">
+        <img src="https://i.ytimg.com/vi/${x.youtubeId}/maxresdefault.jpg" alt="${x.client} ${x.title} 영상 썸네일" referrerpolicy="no-referrer" decoding="async">
         <span class="commercial-play-disc" aria-hidden="true">▶</span><span class="commercial-play-label">PLAY FILM</span>
       </button>
     </div>
-    <div class="commercial-video-caption"><span>${x.tag} · ${x.date}</span><a href="${x.videoUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></div>
+    <div class="commercial-video-caption"><span>${x.tag} · ${x.date}</span><a href="${x.videoUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 보기 ↗</a></div>`}
     <div class="commercial-overview">
       <section class="commercial-summary"><div class="eyebrow">01 / SUMMARY</div><h3>제작 목적</h3><p>${x.summary}</p></section>
       <section class="commercial-role"><div class="eyebrow">02 / ROLE & CONTRIBUTION</div><h3>담당 역할과 기여도</h3><p>${x.roles.join(' · ')}</p><dl class="contribution-list">${x.contributions.map(c=>`<div><dt>${c.label}</dt><dd><span class="contribution-track" aria-hidden="true"><span style="width:${c.percent}%"></span></span><span>${c.percent}%</span></dd></div>`).join('')}</dl></section>
     </div>
     <section class="commercial-execution"><div class="eyebrow">03 / EXECUTION</div><h3>연출과 편집</h3><div class="execution-grid">${x.execution.map((text,i)=>`<div><span class="execution-number">0${i+1}</span><p>${text}</p></div>`).join('')}</div></section>
-    <section class="commercial-results"><div><div class="eyebrow">04 / RESULTS</div><h3>활용 및 성과</h3><ul>${x.results.map(text=>`<li>${text}</li>`).join('')}</ul></div><div class="commercial-metric"><span>${x.revenueLabel}</span><strong>${x.revenue}</strong></div></section>
+    <section class="commercial-results${x.revenue?'':' no-metric'}"><div><div class="eyebrow">04 / RESULTS</div><h3>활용 및 성과</h3><ul>${x.results.map(text=>`<li>${text}</li>`).join('')}</ul></div>${x.revenue?`<div class="commercial-metric"><span>${x.revenueLabel}</span><strong>${x.revenue}</strong></div>`:''}</section>
     <section class="commercial-tools"><span class="eyebrow">05 / TOOLS</span><ul>${x.tools.map(tool=>`<li>${tool}</li>`).join('')}</ul></section>
   </article>`;
 }
@@ -121,6 +121,28 @@ function filterAi(category){
   document.getElementById('ai-empty').hidden=count>0;
   document.getElementById('ai-count').textContent=`${count}개의 프로젝트`;
 }
+// 전체: 브랜드별 요약 카드. 작업명을 누르면 상세 창, '전체 보기'는 해당 브랜드 화면으로 이동합니다.
+const commercialThumb=x=>{const id=x.videos?.[0]?.youtubeId||x.youtubeId;return id?`https://i.ytimg.com/vi/${id}/hqdefault.jpg`:x.image||''};
+function commercialOverview(brands,works){
+  return `<div class="live-overview" data-commercial-brand="전체"><div class="live-index commercial-index">${brands.map((brand,i)=>{
+    const own=works.filter(x=>(x.brand||'기타')===brand).sort((a,b)=>b.date.localeCompare(a.date));
+    const dates=own.map(x=>x.date).sort();
+    const period=dates[0]===dates.at(-1)?dates[0]:`${dates[0]}–${dates.at(-1)}`;
+    const films=own.reduce((n,x)=>n+(x.videos?.length||1),0);
+    const rows=own.map(x=>`<li><button type="button" data-open="${x.id}" aria-haspopup="dialog"><span>${x.title}</span><small>${x.tag}</small><em>${x.client} · ${x.date}</em></button></li>`).join('');
+    return `<section class="live-index-card">
+      <button type="button" class="commercial-index-thumb" data-commercial-filter="${brand}" aria-label="${brand} 작업 전체 보기">${own[0].thumbnail?`<img src="${own[0].thumbnail}" alt="" loading="lazy" decoding="async">`:own[0].videos?`<span class="commercial-index-shorts">${own[0].videos.slice(0,3).map(v=>`<span><img src="https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async"></span>`).join('')}</span>`:`<img src="${commercialThumb(own[0])}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">`}<span class="live-card-no">0${i+1}</span></button>
+      <div class="live-index-top"><span class="eyebrow">${own[0].client.toUpperCase()}</span></div>
+      <h2>${brand}</h2><p class="live-index-period">${period}</p><p class="live-index-tagline">${own[0].desc}</p>
+      <ul class="live-index-list" aria-label="${brand} 작업">${rows}</ul>
+      <button type="button" class="live-more" data-commercial-filter="${brand}"><span><strong>전체 보기</strong><small>프로젝트 ${own.length}개 · 영상 ${films}편</small></span><b aria-hidden="true">→</b></button>
+    </section>`;}).join('')}</div></div>`;
+}
+function filterCommercial(brand){
+  document.querySelectorAll('[data-commercial-filter]').forEach(button=>{const active=button.dataset.commercialFilter===brand;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+  document.querySelectorAll('#commercial-brands [data-commercial-brand]').forEach(section=>{section.hidden=section.dataset.commercialBrand!==brand;if(section.hidden)resetVideoPreviews(section);});
+  if(brand!=='전체')document.querySelector('.live-company-toolbar')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
 function playPortfolioVideo(button){
   const ai=button.closest('.ai-work');
   if(ai)resetVideoPreviews(ai);
@@ -197,15 +219,19 @@ if(page==='Live'){
 }
 if(page==='project'){
   const works=items.filter(x=>x.type==='project');
-  target.innerHTML=heading('COMMERCIAL FILMS','Commercial','브랜드의 이야기를 영상으로 만드는 작업들.',String(works.length).padStart(2,'0'))+works.map(commercialWork).join('');
+  // 작업물의 brand 값으로 카테고리가 자동으로 만들어집니다.
+  const brands=[...new Set(works.map(x=>x.brand||'기타'))];
+  target.innerHTML=heading('COMMERCIAL FILMS','Commercial','브랜드의 이야기를 영상으로 만드는 작업들.',String(works.length).padStart(2,'0'))+
+    `<div class="live-company-toolbar"><div class="toolbar" aria-label="브랜드별 분류">${['전체',...brands].map((brand,i)=>`<button class="filter ${i===0?'active':''}" data-commercial-filter="${brand}" aria-pressed="${i===0}">${brand}</button>`).join('')}</div></div>`+
+    `<div id="commercial-brands">${commercialOverview(brands,works)}${brands.map(brand=>{const own=works.filter(x=>(x.brand||'기타')===brand);return `<section class="commercial-brand" data-commercial-brand="${brand}" hidden><div class="live-subhead"><h3>${brand}</h3><span>${String(own.length).padStart(2,'0')}편</span></div>${own.map(commercialWork).join('')}</section>`}).join('')}</div>`;
 }}
 
 renderPage();
 const dialog=document.getElementById('detail');const modal=dialog.querySelector('.modal-body');
-function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;dialog.classList.toggle('dialog-wide',x.type==='Live');if(x.type==='Live'&&page==='Live')history.replaceState(null,'',`#${id}`);modal.innerHTML=x.type==='image'&&x.videos?aiWork(x):x.type==='Live'?(isShowcase(x)?liveShowcase(x):liveWork(x)):x.youtubeId?commercialWork(x):`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p>`;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
+function openItem(id){const x=items.find(x=>x.id===id);if(!x)return;dialog.classList.toggle('dialog-wide',x.type==='Live'||x.type==='project');if(x.type==='Live'&&page==='Live')history.replaceState(null,'',`#${id}`);modal.innerHTML=x.type==='image'&&x.videos?aiWork(x):x.type==='Live'?(isShowcase(x)?liveShowcase(x):liveWork(x)):x.type==='project'?commercialWork(x):`<div class="eyebrow">${x.tag}</div><h2>${x.title}</h2>${x.image?`<img src="${x.image}" alt="${x.title}">`:''}<p>${x.body}</p>`;if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
 function showSaved(){dialog.classList.remove('dialog-wide');modal.innerHTML='<div class="eyebrow">YOUR LITTLE COLLECTION</div><h2>My picks</h2>'+(!saved.length?'<p class="empty">아직 담은 작품이 없어요.<br>컬렉션에서 마음에 드는 작품의 ♡를 눌러보세요.</p>':saved.map(id=>{const x=items.find(x=>x.id===id);return `<div class="saved-row"><button data-open="${id}">${x.title} ↗</button><button data-remove="${id}" aria-label="${x.title} 저장 취소">삭제</button></div>`}).join(''))+'<p class="sample-note">관심 작품은 이 브라우저에 저장됩니다.</p>';if(!dialog.open)dialog.showModal();}
 function toggleSave(id){saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];try{localStorage.setItem('blue-basket-saved',JSON.stringify(saved))}catch{}document.getElementById('saved-count').textContent=saved.length;document.querySelectorAll('[data-save]').forEach(b=>{const active=saved.includes(b.dataset.save);b.setAttribute('aria-pressed',active)});}
-document.addEventListener('click',e=>{const play=e.target.closest('[data-play-video]');if(play)playPortfolioVideo(play);const aiFilter=e.target.closest('[data-ai-filter]');if(aiFilter)filterAi(aiFilter.dataset.aiFilter);const company=e.target.closest('[data-live-filter]');if(company)filterLive(company.dataset.liveFilter);const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
+document.addEventListener('click',e=>{const play=e.target.closest('[data-play-video]');if(play)playPortfolioVideo(play);const brandFilter=e.target.closest('[data-commercial-filter]');if(brandFilter)filterCommercial(brandFilter.dataset.commercialFilter);const aiFilter=e.target.closest('[data-ai-filter]');if(aiFilter)filterAi(aiFilter.dataset.aiFilter);const company=e.target.closest('[data-live-filter]');if(company)filterLive(company.dataset.liveFilter);const open=e.target.closest('[data-open]');if(open)openItem(open.dataset.open);const save=e.target.closest('[data-save]');if(save)toggleSave(save.dataset.save);const remove=e.target.closest('[data-remove]');if(remove){toggleSave(remove.dataset.remove);showSaved()}const filter=e.target.closest('[data-filter]');if(filter){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===filter);b.setAttribute('aria-pressed',b===filter)});document.querySelectorAll('[data-tag]').forEach(x=>x.classList.toggle('hidden',filter.dataset.filter!=='전체'&&x.dataset.tag!==filter.dataset.filter))}});
 document.getElementById('show-saved').addEventListener('click',showSaved);dialog.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>{modal.replaceChildren();if(location.hash)history.replaceState(null,'',location.pathname+location.search);});dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 
 // A shared link such as Live.html#live-musinsa-satur opens that broadcast directly.

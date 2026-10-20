@@ -616,6 +616,7 @@
 {
   "id": "commercial-29cm-lifes-like",
   "type": "project",
+  "brand": "재지팩트",
   "tag": "굿즈 티저",
   "title": "Lifes Like Recollection",
   "client": "29CM × 재지팩트",
@@ -664,6 +665,57 @@
     "Illustrator"
   ],
   "body": "재지팩트 Lifes Like 10주년 기념 굿즈 티저. 콘셉트 기획, 촬영 구성 및 현장 촬영, 편집, 색보정. 기획 100% · 디자인 100% · 촬영 50% · 편집 100%."
+},
+{
+  "id": "commercial-29cm-haagendazs",
+  "type": "project",
+  "brand": "하겐다즈",
+  "thumbnail": "assets/commercial/haagendazs-thumb.webp",
+  "tag": "신제품 숏폼",
+  "title": "Love The Mix",
+  "client": "29CM × 하겐다즈",
+  "date": "2021.02",
+  "desc": "하겐다즈의 두 가지 신제품 맛과 ‘Love the Mix’ 슬로건을 전하는 숏폼 영상",
+  "videos": [
+    {
+      "label": "Pina Colada",
+      "youtubeId": "iAgQKJsdLR8",
+      "url": "https://www.youtube.com/shorts/iAgQKJsdLR8"
+    },
+    {
+      "label": "Lime Mojito Sorbet",
+      "youtubeId": "AAay9CjT1xo",
+      "url": "https://www.youtube.com/shorts/AAay9CjT1xo"
+    }
+  ],
+  "summary": "하겐다즈의 두 가지 신제품 맛과 ‘Love the Mix’ 슬로건을 직관적으로 전달하는 숏폼 영상을 제작했습니다. 각 맛을 연상시키는 코코넛과 파인애플 등의 실제 식재료를 활용해 맛의 특징을 시각화하고, 두 가지 맛이 대비되면서도 하나로 어우러지는 모습을 화면 분할 기법으로 표현했습니다. 완성된 영상은 제품 상세 페이지와 29TV 콘텐츠로 활용되었습니다.",
+  "roles": [
+    "영상 기획",
+    "현장 촬영(Sony A7m3)",
+    "영상 편집",
+    "색보정"
+  ],
+  "contributions": [
+    {"label": "기획", "percent": 100},
+    {"label": "디자인", "percent": 100},
+    {"label": "촬영", "percent": 90},
+    {"label": "편집", "percent": 100}
+  ],
+  "execution": [
+    "각 맛을 연상시키는 코코넛·파인애플 등의 실제 식재료를 활용해 맛의 특징을 표현했습니다.",
+    "신제품별 컬러와 질감이 돋보이도록 제품과 식재료를 클로즈업으로 촬영했습니다.",
+    "두 가지 맛이 대비되면서 ‘Love the Mix’ 슬로건까지 전달되도록 화면 분할 구성으로 편집했습니다."
+  ],
+  "results": [
+    "두 가지 신제품의 특징을 소개하는 숏폼 콘텐츠를 제작했습니다.",
+    "완성 영상을 제품 상세 페이지와 29TV 공식 콘텐츠로 활용했습니다."
+  ],
+  "tools": [
+    "Premiere Pro",
+    "After Effects",
+    "Illustrator"
+  ],
+  "body": "29CM × 하겐다즈 Love The Mix 신제품 숏폼 2편(Pina Colada, Lime Mojito Sorbet). 영상 기획, 현장 촬영, 편집, 색보정. 기획 100% · 디자인 100% · 촬영 90% · 편집 100%."
 }
 ]
   };
